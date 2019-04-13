@@ -146,11 +146,13 @@ local function tpc_send(player,coordinates)
 		if minetest.check_player_privs(pname, {tp_tpc=true}) then
 			local protected = minetest.is_protected(target_coords,pname)
 			if protected then
-				if not areas:canInteract(target_coords, player) then
-					local owners = areas:getNodeOwners(target_coords)
-					minetest.chat_send_player(player,("Error: %s is protected by %s."):format(minetest.pos_to_string(target_coords),table.concat(owners, ", ")))
-					return
-				end
+				if minetest.get_modpath('areas') then
+					if not areas:canInteract(target_coords, player) then
+						local owners = areas:getNodeOwners(target_coords)
+						minetest.chat_send_player(player,("Error: %s is protected by %s."):format(minetest.pos_to_string(target_coords),table.concat(owners, ", ")))
+						return
+					end
+				else end
 			end
 			minetest.chat_send_player(player, 'Teleporting to '..posx..','..posy..','..posz)
 			pname:setpos(find_free_position_near(target_coords))
